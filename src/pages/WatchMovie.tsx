@@ -1,6 +1,5 @@
 import React from 'react';
 import useQuery from '../utils/useQuery';
-import ReactPlayer from 'react-player';
 import Header from '../components/Header';
 
 const WatchMovie = () => {
@@ -9,7 +8,7 @@ const WatchMovie = () => {
   return (
     <div className="h-screen bg-green-400">
       <Header />
-      <video controls autoPlay>
+      <video controls autoPlay width="50%" height="40%">
         <source
           type="video/mp4"
           src={`http://${localStorage.getItem(

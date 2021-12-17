@@ -23,7 +23,7 @@ const ChooseEpisode = () => {
         const s = d.data.seasons;
         setSeasons(s);
       });
-  }, []);
+  }, [query]);
 
   useEffect(() => {
     setEpisodes([]);
@@ -39,7 +39,7 @@ const ChooseEpisode = () => {
         setEpisodes(d.data.episodes);
       })
       .catch(err => console.log(err));
-  }, [season]);
+  }, [season, query]);
 
   return (
     <div className="h-screen flex flex-col bg-green-400">
@@ -48,6 +48,8 @@ const ChooseEpisode = () => {
         <div className="h-5/6 w-5/6 border flex flex-row">
           <div className="overflow-y-auto border-r-8 min-h-full w-2/6 flex flex-col">
             {seasons.map(s => {
+              if (s[0] === '.') return null;
+
               return (
                 <div
                   key={s}
@@ -63,27 +65,70 @@ const ChooseEpisode = () => {
           </div>
           <>
             {season ? (
-              <div className="w-full flex max-h-full flex-col items-center justify-center overflow-y-auto">
-                {episodes && (
+              <div className="h-full w-full flex flex-col items-center justify-center">
+                <div className="w-full flex max-h-96 flex-col items-center justify-center overflow-y-auto">
+                  {episodes && (
+                    <div className="h-full w-full flex items-center flex-col">
+                      {episodes
+                        .sort(function (a, b) {
+                          return (
+                            parseInt(a.split(' ')[1]) -
+                            parseInt(b.split(' ')[1])
+                          );
+                        })
+
+                        .map(episode => {
+                          return (
+                            <div
+                              onClick={() => {
+                                navigate(
+                                  `/tvshow/view?name=${query.get(
+                                    'name'
+                                  )}&season=${
+                                    season.split(' ')[1]
+                                  }&episode=${episode}`
+                                );
+                              }}
+                              className="p-1 bg-white rounded cursor-pointer flex w-3/6 mb-2 text-green-400"
+                            >
+                              <strong className="text-green-400">
+                                {episode}
+                              </strong>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  )}
+                </div>
+                {/**
                   <>
-                    {episodes.map(episode => {
-                      return (
-                        <div
-                          onClick={() => {
-                            navigate(
-                              `/tvshow/view?name=${query.get('name')}&season=${
-                                season.split(' ')[1]
-                              }&episode=${episode}`
-                            );
-                          }}
-                          className="flex w-5/6 cursor-pointer mb-4  bg-white p-2 text-green-500 rounded"
-                        >
-                          <strong>{episode}</strong>
-                        </div>
-                      );
-                    })}
+                    {episodes
+                      .sort(function (a, b) {
+                        return (
+                          parseInt(a.split(' ')[1]) - parseInt(b.split(' ')[1])
+                        );
+                      })
+
+                      .map(episode => {
+                        return (
+                          <div
+                            onClick={() => {
+                              navigate(
+                                `/tvshow/view?name=${query.get(
+                                  'name'
+                                )}&season=${
+                                  season.split(' ')[1]
+                                }&episode=${episode}`
+                              );
+                            }}
+                            className="flex w-5/6 cursor-pointer mb-4  bg-white p-2 text-green-500 rounded"
+                          >
+                            <strong>{episode}</strong>
+                          </div>
+                        );
+                      })}
                   </>
-                )}
+ */}
               </div>
             ) : (
               <div className="w-full flex h-full items-center justify-center">
